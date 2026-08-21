@@ -1,0 +1,121 @@
+html,
+body {
+  margin: 0;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: transparent;
+
+  @media (prefers-color-scheme: light) {
+    color: black
+  }
+
+  svg#icon {
+    fill: currentColor;
+    width: 32px;
+    height: 32px;
+  }
+
+  --sidebarWidth: 72px;
+
+  div#main-container {
+    float: right;
+    display: block;
+    width: calc(100% - 4px - var(--sidebarWidth));
+    height: 100%;
+
+    div#main {
+      margin: 10;
+
+      div#curPreview-container {
+        border-radius: 14px;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        transition: 0.2s ease-in-out;
+
+        @media (prefers-color-scheme: light) {
+          background: rgba(0, 0, 0, 0.1);
+        }
+
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+
+          @media (prefers-color-scheme: light) {
+            background: rgba(0, 0, 0, 0.2);
+          }
+
+          >* {
+            opacity: 0.9;
+          }
+        }
+
+        div#curPreview-content {
+          user-select: none;
+          margin: 0;
+          height: 64px;
+
+          p#curName {
+            font-size: 20px;
+            margin: 8px 16px 0 16px;
+            height: fit-content;
+            width: fit-content;
+            top: 50%;
+            transform: translateY(65%);
+          }
+
+          div#curPreviews {
+            margin: 0;
+            margin-right: 10px;
+            top: 50%;
+            transform: translateY(-35%);
+            float: right;
+            img.cursor-preview {
+              width: 32px
+            }
+          }
+        }
+      }
+    }
+  }
+
+  div#sidebar-container {
+    margin-left: 4px;
+    float: left;
+    display: block;
+    width: var(--sidebarWidth);
+    height: 100%;
+
+    div#sb-button {
+      margin: 2px;
+      border-radius: 14px;
+      display: inline-block;
+      width: 100%;
+      height: 78px;
+      transition: 0.2s ease-in-out;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+
+        @media (prefers-color-scheme: light) {
+          background: rgba(0, 0, 0, 0.2);
+        }
+
+        >* {
+          opacity: 0.9;
+        }
+      }
+
+      div#sb-icon {
+        display: flex;
+        justify-content: center;
+        transform: translateY(25%);
+      }
+
+      p#sb-label {
+        user-select: none;
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
+}
