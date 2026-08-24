@@ -225,6 +225,14 @@ window.addEventListener("DOMContentLoaded", async () => {
 
       await applyCursorTheme(button.getAttribute("theme"))
     });
+  document
+    .addEventListener("click", async (event) => {
+      const button = event.target.closest("#cursorDir-button");
+      if (!button) return;
+
+      const curDir = await getCursorDirectory()
+      await openPath(curDir);
+    });
 
   document
     .querySelector(".themes-button")
@@ -240,7 +248,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   document
     .querySelector(".settings-button")
     .addEventListener("click", async () => {
-      document.getElementById("main").innerHTML = '<p>Settings Test</p>'
+      document.getElementById("main").innerHTML = '<p>Settings Test</p><br><button id="cursorDir-button">Cursor Folder</button>'
     });
 
   document

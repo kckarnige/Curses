@@ -13,15 +13,10 @@ fn apply_cursor_theme(
     theme: String,
     cursors: HashMap<String, String>,
 ) -> Result<(), String> {
-    use winreg::{
-        enums::HKEY_CURRENT_USER,
-        RegKey,
-    };
+    use winreg::{enums::HKEY_CURRENT_USER, RegKey};
 
     use windows::Win32::UI::WindowsAndMessaging::{
-        SystemParametersInfoW,
-        SPI_SETCURSORS,
-        SYSTEM_PARAMETERS_INFO_UPDATE_FLAGS,
+        SystemParametersInfoW, SPI_SETCURSORS, SYSTEM_PARAMETERS_INFO_UPDATE_FLAGS,
     };
 
     const VALID_ROLES: &[&str] = &[
@@ -72,9 +67,7 @@ fn apply_cursor_theme(
 
         // Protect against things like ../../some-file.
         if !cursor_path.starts_with(&theme_dir) {
-            return Err(
-                "Cursor file points outside the theme directory".into()
-            );
+            return Err("Cursor file points outside the theme directory".into());
         }
 
         let extension = cursor_path
@@ -91,10 +84,7 @@ fn apply_cursor_theme(
         }
 
         cursor_key
-            .set_value(
-                &role,
-                &cursor_path.to_string_lossy().to_string(),
-            )
+            .set_value(&role, &cursor_path.to_string_lossy().to_string())
             .map_err(|e| e.to_string())?;
     }
 
@@ -380,6 +370,7 @@ fn encode_png(width: u32, height: u32, pixels: &[u8]) -> Result<Vec<u8>, String>
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_shell::init())
         .setup(|app| {
             // create_dir_all also creates the parent app-data directory.

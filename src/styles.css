@@ -98,8 +98,8 @@ body div#sidebar-container {
   width: var(--sidebarWidth);
   height: 100%;
 }
-html div#sidebar-container div#sb-button,
-body div#sidebar-container div#sb-button {
+html div#sidebar-container div#sidebar-button,
+body div#sidebar-container div#sidebar-button {
   margin: 2px;
   border-radius: 14px;
   display: inline-block;
@@ -107,28 +107,28 @@ body div#sidebar-container div#sb-button {
   height: 78px;
   transition: 0.2s ease-in-out;
 }
-html div#sidebar-container div#sb-button:hover,
-body div#sidebar-container div#sb-button:hover {
+html div#sidebar-container div#sidebar-button:hover,
+body div#sidebar-container div#sidebar-button:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 @media (prefers-color-scheme: light) {
-  html div#sidebar-container div#sb-button:hover,
-  body div#sidebar-container div#sb-button:hover {
+  html div#sidebar-container div#sidebar-button:hover,
+  body div#sidebar-container div#sidebar-button:hover {
     background: rgba(0, 0, 0, 0.2);
   }
 }
-html div#sidebar-container div#sb-button:hover > *,
-body div#sidebar-container div#sb-button:hover > * {
+html div#sidebar-container div#sidebar-button:hover > *,
+body div#sidebar-container div#sidebar-button:hover > * {
   opacity: 0.9;
 }
-html div#sidebar-container div#sb-button div#sb-icon,
-body div#sidebar-container div#sb-button div#sb-icon {
+html div#sidebar-container div#sidebar-button div#sidebar-icon,
+body div#sidebar-container div#sidebar-button div#sidebar-icon {
   display: flex;
   justify-content: center;
   transform: translateY(25%);
 }
-html div#sidebar-container div#sb-button p#sb-label,
-body div#sidebar-container div#sb-button p#sb-label {
+html div#sidebar-container div#sidebar-button p#sidebar-label,
+body div#sidebar-container div#sidebar-button p#sidebar-label {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;

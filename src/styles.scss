@@ -85,7 +85,7 @@ body {
     width: var(--sidebarWidth);
     height: 100%;
 
-    div#sb-button {
+    div#sidebar-button {
       margin: 2px;
       border-radius: 14px;
       display: inline-block;
@@ -105,13 +105,13 @@ body {
         }
       }
 
-      div#sb-icon {
+      div#sidebar-icon {
         display: flex;
         justify-content: center;
         transform: translateY(25%);
       }
 
-      p#sb-label {
+      p#sidebar-label {
         user-select: none;
         display: flex;
         justify-content: center;

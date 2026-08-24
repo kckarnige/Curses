@@ -1,6 +1,6 @@
 [package]
-name = "sharkcurmnger"
-version = "0.1.0"
+name = "cursescurmnger"
+version = "0.1.1"
 description = "An app to manage custom Window cursor themes."
 authors = ["Robert Elijah \"KiCKinTheBucket\" Reyes"]
 edition = "2021"
@@ -11,7 +11,7 @@ edition = "2021"
 # The `_lib` suffix may seem redundant but it is necessary
 # to make the lib name unique and wouldn't conflict with the bin name.
 # This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
-name = "sharkcurmnger_lib"
+name = "cursescurmnger_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
@@ -28,4 +28,5 @@ png = "0.18.1"
 tauri-plugin-shell = "2"
 winreg = "0.56.0"
 windows = { version = "0.62.2", features = ["Win32_UI_WindowsAndMessaging"] }
+tauri-plugin-store = "2"
 
