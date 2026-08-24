@@ -220,20 +220,338 @@ fn read_cursor_inf(path: String) -> Result<HashMap<String, String>, String> {
 }
 
 #[tauri::command]
-fn list_cursor_themes(app: tauri::AppHandle) -> Result<Vec<String>, String> {
+fn list_cursor_themes(
+    app: tauri::AppHandle,
+) -> Result<Vec<String>, String> {
+    use std::{
+        fs::{self, File},
+        io,
+        path::{Path, PathBuf},
+    };
+
+    use zip::ZipArchive;
+
+    // Canonical filename -> Windows cursor role
+    const CURSOR_NAMES: &[(&str, &str)] = &[
+        ("arrow", "Arrow"),
+        ("help", "Help"),
+        ("appstarting", "AppStarting"),
+        ("wait", "Wait"),
+        ("crosshair", "Crosshair"),
+        ("ibeam", "IBeam"),
+        ("nwpen", "NWPen"),
+        ("no", "No"),
+        ("sizens", "SizeNS"),
+        ("sizewe", "SizeWE"),
+        ("sizenwse", "SizeNWSE"),
+        ("sizenesw", "SizeNESW"),
+        ("sizeall", "SizeAll"),
+        ("uparrow", "UpArrow"),
+        ("hand", "Hand"),
+        ("person", "Person"),
+        ("pin", "Pin"),
+    ];
+
     let cursor_dir = app
         .path()
         .app_data_dir()
         .map_err(|e| e.to_string())?
         .join("cursors");
 
-    let mut themes = Vec::new();
+    fs::create_dir_all(&cursor_dir)
+        .map_err(|e| e.to_string())?;
 
-    for entry in fs::read_dir(cursor_dir).map_err(|e| e.to_string())? {
+    // --------------------------------
+    // Find .cursepack files
+    // --------------------------------
+
+    let mut packs: Vec<PathBuf> = Vec::new();
+
+    for entry in fs::read_dir(&cursor_dir)
+        .map_err(|e| e.to_string())?
+    {
         let entry = entry.map_err(|e| e.to_string())?;
 
-        if entry.file_type().map_err(|e| e.to_string())?.is_dir() {
-            themes.push(entry.file_name().to_string_lossy().into_owned());
+        if !entry
+            .file_type()
+            .map_err(|e| e.to_string())?
+            .is_file()
+        {
+            continue;
+        }
+
+        let path = entry.path();
+
+        let extension = path
+            .extension()
+            .and_then(|ext| ext.to_str())
+            .unwrap_or("");
+
+        // ONLY .cursepack
+        if extension.eq_ignore_ascii_case("cursepack") {
+            packs.push(path);
+        }
+    }
+
+    // --------------------------------
+    // Import every .cursepack
+    // --------------------------------
+
+    for pack_path in packs {
+        let Some(pack_name) = pack_path
+            .file_stem()
+            .and_then(|name| name.to_str())
+        else {
+            continue;
+        };
+
+        let theme_dir = cursor_dir.join(pack_name);
+
+        println!(
+            "Found .cursepack: {}",
+            pack_path.display()
+        );
+
+        // Don't overwrite an existing theme.
+        if theme_dir.exists() {
+            eprintln!(
+                "Theme already exists: {}",
+                pack_name
+            );
+
+            continue;
+        }
+
+        let import_result: Result<usize, String> = (|| {
+            let file = File::open(&pack_path)
+                .map_err(|e| e.to_string())?;
+
+            // .cursepack is ZIP internally.
+            let mut archive = ZipArchive::new(file)
+                .map_err(|e| {
+                    format!("Invalid .cursepack: {e}")
+                })?;
+
+            fs::create_dir_all(&theme_dir)
+                .map_err(|e| e.to_string())?;
+
+            // Keep track of the files we extracted so
+            // we can generate install.inf afterward.
+            let mut extracted_cursors: Vec<(String, String, String)> =
+                Vec::new();
+
+            for index in 0..archive.len() {
+                let mut entry = archive
+                    .by_index(index)
+                    .map_err(|e| e.to_string())?;
+
+                if !entry.is_file() {
+                    continue;
+                }
+
+                // Prevent things like ../../file
+                let Some(safe_path) = entry.enclosed_name()
+                else {
+                    continue;
+                };
+
+                let Some(filename) = safe_path
+                    .file_name()
+                    .and_then(|name| name.to_str())
+                else {
+                    continue;
+                };
+
+                let filename = filename.to_string();
+                let file_path = Path::new(&filename);
+
+                let extension = file_path
+                    .extension()
+                    .and_then(|ext| ext.to_str())
+                    .unwrap_or("")
+                    .to_ascii_lowercase();
+
+                // Only cursor files.
+                if extension != "cur"
+                    && extension != "ani"
+                {
+                    continue;
+                }
+
+                let stem = file_path
+                    .file_stem()
+                    .and_then(|stem| stem.to_str())
+                    .unwrap_or("")
+                    .to_ascii_lowercase();
+
+                // Find which Windows role this filename represents.
+                let Some((_, role)) = CURSOR_NAMES
+                    .iter()
+                    .find(|(name, _)| *name == stem)
+                else {
+                    println!(
+                        "Ignoring unknown cursor: {}",
+                        filename
+                    );
+
+                    continue;
+                };
+
+                let output_path =
+                    theme_dir.join(&filename);
+
+                let mut output =
+                    File::create(&output_path)
+                        .map_err(|e| e.to_string())?;
+
+                io::copy(
+                    &mut entry,
+                    &mut output,
+                )
+                .map_err(|e| e.to_string())?;
+
+                println!(
+                    "{} -> {}",
+                    role,
+                    filename
+                );
+
+                // role, variable name, filename
+                extracted_cursors.push((
+                    role.to_string(),
+                    stem,
+                    filename,
+                ));
+            }
+
+            if extracted_cursors.is_empty() {
+                return Err(
+                    "Pack contains no recognized cursor files"
+                        .into()
+                );
+            }
+
+            // --------------------------------
+            // Generate install.inf
+            // --------------------------------
+
+            let mut inf = String::new();
+
+            inf.push_str(
+                "[Version]\r\n\
+                 Signature=\"$Windows NT$\"\r\n\
+                 \r\n\
+                 [DefaultInstall]\r\n\
+                 AddReg=Wreg\r\n\
+                 \r\n\
+                 [Wreg]\r\n"
+            );
+
+            for (role, variable, _) in &extracted_cursors {
+                inf.push_str(&format!(
+                    "HKCU,\"Control Panel\\Cursors\",\"{}\",0x00000000,\"%CUR_DIR%\\%{}%\"\r\n",
+                    role,
+                    variable
+                ));
+            }
+
+            inf.push_str("\r\n[Strings]\r\n");
+
+            // Store the absolute extracted directory.
+            inf.push_str(&format!(
+                "CUR_DIR=\"{}\"\r\n",
+                theme_dir.to_string_lossy()
+            ));
+
+            for (_, variable, filename) in &extracted_cursors {
+                inf.push_str(&format!(
+                    "{}=\"{}\"\r\n",
+                    variable,
+                    filename
+                ));
+            }
+
+            let inf_path =
+                theme_dir.join("install.inf");
+
+            fs::write(
+                &inf_path,
+                inf
+            )
+            .map_err(|e| {
+                format!(
+                    "Failed to create install.inf: {e}"
+                )
+            })?;
+
+            println!(
+                "Created: {}",
+                inf_path.display()
+            );
+
+            Ok(extracted_cursors.len())
+        })();
+
+        match import_result {
+            Ok(count) => {
+                println!(
+                    "Imported {} cursor(s) from {}",
+                    count,
+                    pack_name
+                );
+
+                // Delete .cursepack only after EVERYTHING
+                // succeeded, including install.inf creation.
+                if let Err(error) =
+                    fs::remove_file(&pack_path)
+                {
+                    eprintln!(
+                        "Couldn't delete {}: {}",
+                        pack_path.display(),
+                        error
+                    );
+                }
+            }
+
+            Err(error) => {
+                eprintln!(
+                    "Failed to import {}: {}",
+                    pack_name,
+                    error
+                );
+
+                // Remove incomplete theme.
+                let _ =
+                    fs::remove_dir_all(&theme_dir);
+
+                // Leave original .cursepack untouched.
+            }
+        }
+    }
+
+    // --------------------------------
+    // Return installed theme folders
+    // --------------------------------
+
+    let mut themes = Vec::new();
+
+    for entry in fs::read_dir(&cursor_dir)
+        .map_err(|e| e.to_string())?
+    {
+        let entry =
+            entry.map_err(|e| e.to_string())?;
+
+        if entry
+            .file_type()
+            .map_err(|e| e.to_string())?
+            .is_dir()
+        {
+            themes.push(
+                entry
+                    .file_name()
+                    .to_string_lossy()
+                    .into_owned()
+            );
         }
     }
 

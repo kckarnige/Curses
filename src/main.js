@@ -6,26 +6,6 @@ const { Command } = window.__TAURI__.shell;
 // Keep one Blob URL per <img>.
 const previewUrls = new WeakMap();
 
-async function runPowerShell(script) {
-  const { Command } = window.__TAURI__.shell;
-
-  const command = Command.create("powershell", [
-    "-NoProfile",
-    "-ExecutionPolicy",
-    "Bypass",
-    "-Command",
-    script
-  ]);
-
-  const output = await command.execute();
-
-  if (output.code !== 0) {
-    console.error(output.stderr);
-    throw new Error(output.stderr);
-  }
-
-  return output.stdout;
-}
 
 async function getCursorDirectory() {
   return join(await appDataDir(), "cursors");
@@ -134,6 +114,8 @@ async function loadCursorThemes() {
     ["No", "#cursor6"]
   ];
 
+  const themeCount = themes.length;
+  var themeCounter = 0;
   for (const theme of themes) {
     console.log("Creating preview for:", theme);
 
@@ -214,6 +196,12 @@ async function loadCursorThemes() {
         error
       );
     }
+    themeCounter += 1
+    console.log(themeCounter)
+    if (themeCounter == themeCount) {
+      themeList.classList.add("loaded");
+      document.getElementById("loading").remove();
+    }
   }
 }
 
@@ -237,7 +225,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   document
     .querySelector(".themes-button")
     .addEventListener("click", async () => {
-      document.getElementById("main").innerHTML = '<div id="cursorThemes"></div>'
+      document.getElementById("main").innerHTML = '<p id="loading">Loading...</p><div id="cursorThemes"></div>'
       try {
         await loadCursorThemes();
       } catch (error) {
@@ -248,13 +236,13 @@ window.addEventListener("DOMContentLoaded", async () => {
   document
     .querySelector(".settings-button")
     .addEventListener("click", async () => {
-      document.getElementById("main").innerHTML = '<p>Settings Test</p><br><button id="cursorDir-button">Cursor Folder</button>'
+      document.getElementById("main").innerHTML = '<div id="curseSettings"><button id="cursorDir-button">Cursor Folder</button></div>'
     });
 
   document
     .querySelector(".info-button")
     .addEventListener("click", async () => {
-      document.getElementById("main").innerHTML = '<p>Info Test</p>'
+      document.getElementById("main").innerHTML = '<div id="curseInfo"></div>'
     });
 
   try {

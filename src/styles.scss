@@ -26,6 +26,17 @@ body {
     div#main {
       margin: 10;
 
+      div#cursorThemes {
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.2s ease-in-out;
+
+        &.loaded {
+          opacity: 1;
+          pointer-events: initial;
+        }
+      }
+
       div#curPreview-container {
         border-radius: 14px;
         width: 100%;
@@ -69,6 +80,7 @@ body {
             top: 50%;
             transform: translateY(-35%);
             float: right;
+
             img.cursor-preview {
               width: 32px
             }

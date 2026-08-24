@@ -32,6 +32,17 @@ html div#main-container div#main,
 body div#main-container div#main {
   margin: 10;
 }
+html div#main-container div#main div#cursorThemes,
+body div#main-container div#main div#cursorThemes {
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.2s ease-in-out;
+}
+html div#main-container div#main div#cursorThemes.loaded,
+body div#main-container div#main div#cursorThemes.loaded {
+  opacity: 1;
+  pointer-events: initial;
+}
 html div#main-container div#main div#curPreview-container,
 body div#main-container div#main div#curPreview-container {
   border-radius: 14px;
