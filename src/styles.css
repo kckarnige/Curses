@@ -56,7 +56,7 @@ body div#main-container div#main div#cursorThemes.loaded {
 }
 html div#main-container div#main div#curPreview-container,
 body div#main-container div#main div#curPreview-container {
-  border-radius: 14px;
+  border-radius: 6px;
   width: 100%;
   background: rgba(255, 255, 255, 0.05);
   transition: 0.2s ease-in-out;
