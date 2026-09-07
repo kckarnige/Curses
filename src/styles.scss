@@ -1,3 +1,14 @@
+:root {
+  --cursePreviewHighlight-light: rgba(0, 0, 0, 0.2);
+  --cursePreviewHighlight-dark: rgba(255, 255, 255, 0.2);
+  --cursePreviewHighlightClick-light: rgba(0, 0, 0, 0.2);
+  --cursePreviewHighlightClick-dark: rgba(255, 255, 255, 0.2);
+  --sidebarBGHighlight-light: rgba(0, 0, 0, 0.2);
+  --sidebarBGHighlight-dark: rgba(255, 255, 255, 0.2);
+  --sidebarBGHighlightClick-light: rgba(0, 0, 0, 0.2);
+  --sidebarBGHighlightClick-dark: rgba(255, 255, 255, 0.2);
+}
+
 html,
 body {
   margin: 0;
@@ -40,23 +51,30 @@ body {
       div#curPreview-container {
         border-radius: 14px;
         width: 100%;
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
         transition: 0.2s ease-in-out;
 
         @media (prefers-color-scheme: light) {
-          background: rgba(0, 0, 0, 0.1);
+          background: rgba(0, 0, 0, 0.05);
         }
 
-
         &:hover {
-          background: rgba(255, 255, 255, 0.2);
+          background: var(--cursePreviewHighlight-dark);
 
           @media (prefers-color-scheme: light) {
-            background: rgba(0, 0, 0, 0.2);
+            background: var(--cursePreviewHighlight-light);
           }
 
           >* {
             opacity: 0.9;
+          }
+        }
+
+        &:active {
+          background: var(--cursePreviewHighlightClick-dark);
+
+          @media (prefers-color-scheme: light) {
+            background: var(--cursePreviewHighlightClick-light);
           }
         }
 
@@ -87,6 +105,58 @@ body {
           }
         }
       }
+
+      div#curseInfo1 {
+        display: block;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 14px 4px 10px 4px;
+        margin: 20px;
+        margin-bottom: 6px;
+        border-radius: 6px 6px 0 0;
+
+        div#curseIconContainer {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          img {
+            width: 128px;
+          }
+        }
+
+        div#curseInfoText {
+          text-align: center;
+
+          p#appName {
+            font-size: large;
+            line-height: 0;
+          }
+
+          p#appSubtitle {
+            margin: 0;
+            font-size: small;
+          }
+        }
+      }
+
+      div#curseInfo2 {
+        display: block;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 10px 4px 12px 4px;
+        margin: 20px;
+        margin-top: 6px;
+        border-radius: 0 0 6px 6px;
+
+        div#curseInfoText {
+          text-align: center;
+
+          p#copyright {
+            margin: 0;
+            font-size: small;
+            opacity: 0.5;
+          }
+        }
+      }
     }
   }
 
@@ -106,14 +176,22 @@ body {
       transition: 0.2s ease-in-out;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.2);
+        background: var(--sidebarBGHighlight-dark);
 
         @media (prefers-color-scheme: light) {
-          background: rgba(0, 0, 0, 0.2);
+          background: var(--sidebarBGHighlight-light);
         }
 
         >* {
           opacity: 0.9;
+        }
+      }
+
+      &:active {
+        background: var(--sidebarBGHighlightClick-dark);
+
+        @media (prefers-color-scheme: light) {
+          background: var(--sidebarBGHighlightClick-light);
         }
       }
 

@@ -27,7 +27,7 @@ oxideav-ico = "0.0.7"
 png = "0.18.1"
 tauri-plugin-shell = "2"
 winreg = "0.56.0"
-windows = { version = "0.62.2", features = ["Win32_UI_WindowsAndMessaging"] }
+windows = { version = "0.62.2", features = ["Win32_UI_WindowsAndMessaging", "UI_ViewManagement"] }
 tauri-plugin-store = "2"
 zip = "8.6.0"
 

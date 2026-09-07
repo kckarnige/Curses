@@ -560,6 +560,48 @@ fn list_cursor_themes(
     Ok(themes)
 }
 
+#[cfg(target_os = "windows")]
+use windows::UI::ViewManagement::{UIColorType, UISettings};
+
+#[cfg(target_os = "windows")]
+fn color_to_hex(color: windows::UI::Color) -> String {
+    format!("#{:02X}{:02X}{:02X}", color.R, color.G, color.B)
+}
+
+#[tauri::command]
+fn get_accent_palette() -> Result<Vec<String>, String> {
+    #[cfg(target_os = "windows")]
+    {
+        let settings = UISettings::new()
+            .map_err(|e| e.to_string())?;
+
+        let colors = [
+            UIColorType::AccentDark3,
+            UIColorType::AccentDark2,
+            UIColorType::AccentDark1,
+            UIColorType::Accent,
+            UIColorType::AccentLight1,
+            UIColorType::AccentLight2,
+            UIColorType::AccentLight3,
+        ];
+
+        colors
+            .iter()
+            .map(|color| {
+                settings
+                    .GetColorValue(*color)
+                    .map(color_to_hex)
+                    .map_err(|e| e.to_string())
+            })
+            .collect()
+    }
+
+    #[cfg(not(target_os = "windows"))]
+    {
+        Err("Windows accent colors are only available on Windows".into())
+    }
+}
+
 fn resolve_cursor_filename(value: &str, strings: &HashMap<String, String>) -> Option<String> {
     let value = value.trim().trim_matches('"');
 
@@ -714,6 +756,7 @@ pub fn run() {
             read_cursor_inf,
             apply_cursor_theme,
             list_cursor_themes,
+            get_accent_palette
         ])
         .run(tauri::generate_context!())
         .expect("error while running Tauri application");

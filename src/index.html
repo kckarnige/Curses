@@ -1,8 +1,22 @@
 <html>
 
 <head>
+  <meta charset="UTF-8">
   <link rel="stylesheet" href="./styles.min.css" />
   <script type="module" src="./main.js"></script>
+  <style>
+    :root {
+      --cursePreviewHighlight-light: var(--accent-dark);
+      --cursePreviewHighlight-dark: var(--accent-bright);
+      --cursePreviewHighlightClick-light: var(--accent-darker);
+      --cursePreviewHighlightClick-dark: var(--accent-brighter);
+      --sidebarBGHighlight-light: var(--accent-dark);
+      --sidebarBGHighlight-dark: var(--accent-bright);
+      --sidebarBGHighlightClick-light: var(--accent-darker);
+      --sidebarBGHighlightClick-dark: var(--accent-brighter);
+    }
+  </style>
+  <style id="systemAccents"></style>
 </head>
 
 <body>
@@ -45,7 +59,7 @@
             <use href="#gears" />
           </svg>
         </div>
-        <p id="sidebar-label">Settings</p>
+        <p id="sidebar-label">Config</p>
       </div>
 
       <div id="sidebar-button" class="info-button">

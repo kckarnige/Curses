@@ -1,3 +1,14 @@
+:root {
+  --cursePreviewHighlight-light: rgba(0, 0, 0, 0.2);
+  --cursePreviewHighlight-dark: rgba(255, 255, 255, 0.2);
+  --cursePreviewHighlightClick-light: rgba(0, 0, 0, 0.2);
+  --cursePreviewHighlightClick-dark: rgba(255, 255, 255, 0.2);
+  --sidebarBGHighlight-light: rgba(0, 0, 0, 0.2);
+  --sidebarBGHighlight-dark: rgba(255, 255, 255, 0.2);
+  --sidebarBGHighlightClick-light: rgba(0, 0, 0, 0.2);
+  --sidebarBGHighlightClick-dark: rgba(255, 255, 255, 0.2);
+}
+
 html,
 body {
   margin: 0;
@@ -47,28 +58,38 @@ html div#main-container div#main div#curPreview-container,
 body div#main-container div#main div#curPreview-container {
   border-radius: 14px;
   width: 100%;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   transition: 0.2s ease-in-out;
 }
 @media (prefers-color-scheme: light) {
   html div#main-container div#main div#curPreview-container,
   body div#main-container div#main div#curPreview-container {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.05);
   }
 }
 html div#main-container div#main div#curPreview-container:hover,
 body div#main-container div#main div#curPreview-container:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--cursePreviewHighlight-dark);
 }
 @media (prefers-color-scheme: light) {
   html div#main-container div#main div#curPreview-container:hover,
   body div#main-container div#main div#curPreview-container:hover {
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--cursePreviewHighlight-light);
   }
 }
 html div#main-container div#main div#curPreview-container:hover > *,
 body div#main-container div#main div#curPreview-container:hover > * {
   opacity: 0.9;
+}
+html div#main-container div#main div#curPreview-container:active,
+body div#main-container div#main div#curPreview-container:active {
+  background: var(--cursePreviewHighlightClick-dark);
+}
+@media (prefers-color-scheme: light) {
+  html div#main-container div#main div#curPreview-container:active,
+  body div#main-container div#main div#curPreview-container:active {
+    background: var(--cursePreviewHighlightClick-light);
+  }
 }
 html div#main-container div#main div#curPreview-container div#curPreview-content,
 body div#main-container div#main div#curPreview-container div#curPreview-content {
@@ -101,6 +122,58 @@ html div#main-container div#main div#curPreview-container div#curPreview-content
 body div#main-container div#main div#curPreview-container div#curPreview-content div#curPreviews img.cursor-preview {
   width: 32px;
 }
+html div#main-container div#main div#curseInfo1,
+body div#main-container div#main div#curseInfo1 {
+  display: block;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 14px 4px 10px 4px;
+  margin: 20px;
+  margin-bottom: 6px;
+  border-radius: 6px 6px 0 0;
+}
+html div#main-container div#main div#curseInfo1 div#curseIconContainer,
+body div#main-container div#main div#curseInfo1 div#curseIconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+html div#main-container div#main div#curseInfo1 div#curseIconContainer img,
+body div#main-container div#main div#curseInfo1 div#curseIconContainer img {
+  width: 128px;
+}
+html div#main-container div#main div#curseInfo1 div#curseInfoText,
+body div#main-container div#main div#curseInfo1 div#curseInfoText {
+  text-align: center;
+}
+html div#main-container div#main div#curseInfo1 div#curseInfoText p#appName,
+body div#main-container div#main div#curseInfo1 div#curseInfoText p#appName {
+  font-size: large;
+  line-height: 0;
+}
+html div#main-container div#main div#curseInfo1 div#curseInfoText p#appSubtitle,
+body div#main-container div#main div#curseInfo1 div#curseInfoText p#appSubtitle {
+  margin: 0;
+  font-size: small;
+}
+html div#main-container div#main div#curseInfo2,
+body div#main-container div#main div#curseInfo2 {
+  display: block;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px 4px 12px 4px;
+  margin: 20px;
+  margin-top: 6px;
+  border-radius: 0 0 6px 6px;
+}
+html div#main-container div#main div#curseInfo2 div#curseInfoText,
+body div#main-container div#main div#curseInfo2 div#curseInfoText {
+  text-align: center;
+}
+html div#main-container div#main div#curseInfo2 div#curseInfoText p#copyright,
+body div#main-container div#main div#curseInfo2 div#curseInfoText p#copyright {
+  margin: 0;
+  font-size: small;
+  opacity: 0.5;
+}
 html div#sidebar-container,
 body div#sidebar-container {
   margin-left: 4px;
@@ -120,17 +193,27 @@ body div#sidebar-container div#sidebar-button {
 }
 html div#sidebar-container div#sidebar-button:hover,
 body div#sidebar-container div#sidebar-button:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--sidebarBGHighlight-dark);
 }
 @media (prefers-color-scheme: light) {
   html div#sidebar-container div#sidebar-button:hover,
   body div#sidebar-container div#sidebar-button:hover {
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--sidebarBGHighlight-light);
   }
 }
 html div#sidebar-container div#sidebar-button:hover > *,
 body div#sidebar-container div#sidebar-button:hover > * {
   opacity: 0.9;
+}
+html div#sidebar-container div#sidebar-button:active,
+body div#sidebar-container div#sidebar-button:active {
+  background: var(--sidebarBGHighlightClick-dark);
+}
+@media (prefers-color-scheme: light) {
+  html div#sidebar-container div#sidebar-button:active,
+  body div#sidebar-container div#sidebar-button:active {
+    background: var(--sidebarBGHighlightClick-light);
+  }
 }
 html div#sidebar-container div#sidebar-button div#sidebar-icon,
 body div#sidebar-container div#sidebar-button div#sidebar-icon {

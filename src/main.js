@@ -236,18 +236,51 @@ window.addEventListener("DOMContentLoaded", async () => {
   document
     .querySelector(".settings-button")
     .addEventListener("click", async () => {
-      document.getElementById("main").innerHTML = '<div id="curseSettings"><button id="cursorDir-button">Cursor Folder</button></div>'
+      const html = `
+      <div id="curseSettings"><button id="cursorDir-button">Cursor Folder</button></div>
+      `
+      document.getElementById("main").innerHTML = html
     });
 
   document
     .querySelector(".info-button")
     .addEventListener("click", async () => {
-      document.getElementById("main").innerHTML = '<div id="curseInfo"></div>'
+      const html = `
+      <div id="curseInfo1">
+        <div id="curseIconContainer">
+          <img id="curseIcon" src="./icon.svg" />
+        </div>
+        <div id="curseInfoText">
+          <p id="appName">Curses Cursor Manager</p>
+          <p id="appSubtitle">Made out of necessity, boredom, and "Why in curses doesn't this already exist?".</p>
+        </div>
+      </div>
+      <div id="curseInfo2">
+        <div id="curseInfoText">
+          <p id="copyright">&#169; KiCKTheBucket, Robert E. Reyes</p>
+        </div>
+      </div>
+      `
+      document.getElementById("main").innerHTML = html
     });
 
-  try {
-    await loadCursorThemes();
-  } catch (error) {
-    console.error("Failed to load cursor themes:", error);
-  }
+  //try {
+  //  await loadCursorThemes();
+  //} catch (error) {
+  //  console.error("Failed to load cursor themes:", error);
+  //}
 });
+
+var palette = await invoke("get_accent_palette");
+var accentCSS = `
+    :root {
+      --accent-darkest: ${palette[0]};
+      --accent-darker: ${palette[1]};
+      --accent-dark: ${palette[2]};
+      --accent: ${palette[3]};
+      --accent-bright: ${palette[4]};
+      --accent-brighter: ${palette[5]};
+      --accent-brightest: ${palette[6]};
+    }
+    `
+document.getElementById("systemAccents").innerHTML = accentCSS;
