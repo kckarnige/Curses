@@ -1,13 +1,14 @@
-# Tauri + Vanilla
+![appicon](./src-tauri/icon.png)
+# Curses Cursor Manager
+ Made out of necessity, boredom, and "Why in curses doesn't this already exist?".
 
-This template should help get you started developing with Tauri in vanilla HTML, CSS and Javascript.
+## Why use this when MouseX exists?
+- MouseX uses it's own rendering engine for it's cursor, which is great for the features they provide, but most cursors available for download don't really use them. On top of that, most cursors are just ports of cursors made for native Windows, which sort-of defeats the whole purpose of buying the software to begin with, unless you're _IMMEASURABLY_ lazy and want to just hit "Subscribe" and forget about it, which is understandable.
 
-## Recommended IDE Setup
+- Unlike a native Windows cursor, since MouseX isn't loaded on system startup, your set cursor only applies when you sign-in, which isn't really a problem, but it would just make your system feel inconsistent, especially if you go crazy with Wallpaper Engine
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+- If you have a cursor pack you found online with a `install.inf` file, there's a high-likelyhood it will work with Curses.
 
-Font Awesome was used for menu icons.
+- In a perfect universe, if your cursor is packed as a `.cursepack`, you can be sure it's safe, compared to a random Steam Workshop download, or shady looking `install.inf` file.
 
-Cursors used for early testing
-https://www.deviantart.com/va5hone/art/Modern-Cursors-v2-Plus-Light-and-Dark-958666237
-https://www.deviantart.com/fantaferret/art/Wii-Cursors-1041889316
+- It'll save you 3 bucks.
