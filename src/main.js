@@ -264,11 +264,11 @@ window.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("main").innerHTML = html
     });
 
-  //try {
-  //  await loadCursorThemes();
-  //} catch (error) {
-  //  console.error("Failed to load cursor themes:", error);
-  //}
+try {
+  await loadCursorThemes();
+} catch (error) {
+  console.error("Failed to load cursor themes:", error);
+}
 });
 
 var palette = await invoke("get_accent_palette");
