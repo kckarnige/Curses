@@ -13,4 +13,8 @@
 
 - It'll save you 3 bucks.
 
+## Why do you hate MouseX so much?
+**I don't!** I actually bought it, and it's a great piece of software, I'm just a nut who likes his stuff a certain way, and at least for my personal preferences, MouseX just doesn't make sense; I just like my stuff functioning as close to native as possible, like how Wallpaper Engine just sits behind your desktop icons as if it were always a feature, but can't show wallpapers on the lock screen, but gives you the option to capture a screenshot of the wallpaper as a work-around. That being said, if you haven't checked out MouseX, you can find it on Steam.
+
+---
 <sub>© KiCKTheBucket, Robert E. Reyes</sub>
