@@ -12,3 +12,5 @@
 - In a perfect universe, if your cursor is packed as a `.cursepack`, you can be sure it's safe, compared to a random Steam Workshop download, or shady looking `install.inf` file.
 
 - It'll save you 3 bucks.
+
+<sub>© KiCKTheBucket, Robert E. Reyes</sub>
