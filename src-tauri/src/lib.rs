@@ -220,9 +220,7 @@ fn read_cursor_inf(path: String) -> Result<HashMap<String, String>, String> {
 }
 
 #[tauri::command]
-fn list_cursor_themes(
-    app: tauri::AppHandle,
-) -> Result<Vec<String>, String> {
+fn list_cursor_themes(app: tauri::AppHandle) -> Result<Vec<String>, String> {
     use std::{
         fs::{self, File},
         io,
@@ -258,8 +256,7 @@ fn list_cursor_themes(
         .map_err(|e| e.to_string())?
         .join("cursors");
 
-    fs::create_dir_all(&cursor_dir)
-        .map_err(|e| e.to_string())?;
+    fs::create_dir_all(&cursor_dir).map_err(|e| e.to_string())?;
 
     // --------------------------------
     // Find .cursepack files
@@ -267,25 +264,16 @@ fn list_cursor_themes(
 
     let mut packs: Vec<PathBuf> = Vec::new();
 
-    for entry in fs::read_dir(&cursor_dir)
-        .map_err(|e| e.to_string())?
-    {
+    for entry in fs::read_dir(&cursor_dir).map_err(|e| e.to_string())? {
         let entry = entry.map_err(|e| e.to_string())?;
 
-        if !entry
-            .file_type()
-            .map_err(|e| e.to_string())?
-            .is_file()
-        {
+        if !entry.file_type().map_err(|e| e.to_string())?.is_file() {
             continue;
         }
 
         let path = entry.path();
 
-        let extension = path
-            .extension()
-            .and_then(|ext| ext.to_str())
-            .unwrap_or("");
+        let extension = path.extension().and_then(|ext| ext.to_str()).unwrap_or("");
 
         // ONLY .cursepack
         if extension.eq_ignore_ascii_case("cursepack") {
@@ -298,67 +286,47 @@ fn list_cursor_themes(
     // --------------------------------
 
     for pack_path in packs {
-        let Some(pack_name) = pack_path
-            .file_stem()
-            .and_then(|name| name.to_str())
-        else {
+        let Some(pack_name) = pack_path.file_stem().and_then(|name| name.to_str()) else {
             continue;
         };
 
         let theme_dir = cursor_dir.join(pack_name);
 
-        println!(
-            "Found .cursepack: {}",
-            pack_path.display()
-        );
+        println!("Found .cursepack: {}", pack_path.display());
 
         // Don't overwrite an existing theme.
         if theme_dir.exists() {
-            eprintln!(
-                "Theme already exists: {}",
-                pack_name
-            );
+            eprintln!("Theme already exists: {}", pack_name);
 
             continue;
         }
 
         let import_result: Result<usize, String> = (|| {
-            let file = File::open(&pack_path)
-                .map_err(|e| e.to_string())?;
+            let file = File::open(&pack_path).map_err(|e| e.to_string())?;
 
             // .cursepack is ZIP internally.
-            let mut archive = ZipArchive::new(file)
-                .map_err(|e| {
-                    format!("Invalid .cursepack: {e}")
-                })?;
+            let mut archive =
+                ZipArchive::new(file).map_err(|e| format!("Invalid .cursepack: {e}"))?;
 
-            fs::create_dir_all(&theme_dir)
-                .map_err(|e| e.to_string())?;
+            fs::create_dir_all(&theme_dir).map_err(|e| e.to_string())?;
 
             // Keep track of the files we extracted so
             // we can generate install.inf afterward.
-            let mut extracted_cursors: Vec<(String, String, String)> =
-                Vec::new();
+            let mut extracted_cursors: Vec<(String, String, String)> = Vec::new();
 
             for index in 0..archive.len() {
-                let mut entry = archive
-                    .by_index(index)
-                    .map_err(|e| e.to_string())?;
+                let mut entry = archive.by_index(index).map_err(|e| e.to_string())?;
 
                 if !entry.is_file() {
                     continue;
                 }
 
                 // Prevent things like ../../file
-                let Some(safe_path) = entry.enclosed_name()
-                else {
+                let Some(safe_path) = entry.enclosed_name() else {
                     continue;
                 };
 
-                let Some(filename) = safe_path
-                    .file_name()
-                    .and_then(|name| name.to_str())
-                else {
+                let Some(filename) = safe_path.file_name().and_then(|name| name.to_str()) else {
                     continue;
                 };
 
@@ -372,9 +340,7 @@ fn list_cursor_themes(
                     .to_ascii_lowercase();
 
                 // Only cursor files.
-                if extension != "cur"
-                    && extension != "ani"
-                {
+                if extension != "cur" && extension != "ani" {
                     continue;
                 }
 
@@ -385,50 +351,26 @@ fn list_cursor_themes(
                     .to_ascii_lowercase();
 
                 // Find which Windows role this filename represents.
-                let Some((_, role)) = CURSOR_NAMES
-                    .iter()
-                    .find(|(name, _)| *name == stem)
-                else {
-                    println!(
-                        "Ignoring unknown cursor: {}",
-                        filename
-                    );
+                let Some((_, role)) = CURSOR_NAMES.iter().find(|(name, _)| *name == stem) else {
+                    println!("Ignoring unknown cursor: {}", filename);
 
                     continue;
                 };
 
-                let output_path =
-                    theme_dir.join(&filename);
+                let output_path = theme_dir.join(&filename);
 
-                let mut output =
-                    File::create(&output_path)
-                        .map_err(|e| e.to_string())?;
+                let mut output = File::create(&output_path).map_err(|e| e.to_string())?;
 
-                io::copy(
-                    &mut entry,
-                    &mut output,
-                )
-                .map_err(|e| e.to_string())?;
+                io::copy(&mut entry, &mut output).map_err(|e| e.to_string())?;
 
-                println!(
-                    "{} -> {}",
-                    role,
-                    filename
-                );
+                println!("{} -> {}", role, filename);
 
                 // role, variable name, filename
-                extracted_cursors.push((
-                    role.to_string(),
-                    stem,
-                    filename,
-                ));
+                extracted_cursors.push((role.to_string(), stem, filename));
             }
 
             if extracted_cursors.is_empty() {
-                return Err(
-                    "Pack contains no recognized cursor files"
-                        .into()
-                );
+                return Err("Pack contains no recognized cursor files".into());
             }
 
             // --------------------------------
@@ -444,85 +386,50 @@ fn list_cursor_themes(
                  [DefaultInstall]\r\n\
                  AddReg=Wreg\r\n\
                  \r\n\
-                 [Wreg]\r\n"
+                 [Wreg]\r\n",
             );
 
             for (role, variable, _) in &extracted_cursors {
                 inf.push_str(&format!(
                     "HKCU,\"Control Panel\\Cursors\",\"{}\",0x00000000,\"%CUR_DIR%\\%{}%\"\r\n",
-                    role,
-                    variable
+                    role, variable
                 ));
             }
 
             inf.push_str("\r\n[Strings]\r\n");
 
             // Store the absolute extracted directory.
-            inf.push_str(&format!(
-                "CUR_DIR=\"{}\"\r\n",
-                theme_dir.to_string_lossy()
-            ));
+            inf.push_str(&format!("CUR_DIR=\"{}\"\r\n", theme_dir.to_string_lossy()));
 
             for (_, variable, filename) in &extracted_cursors {
-                inf.push_str(&format!(
-                    "{}=\"{}\"\r\n",
-                    variable,
-                    filename
-                ));
+                inf.push_str(&format!("{}=\"{}\"\r\n", variable, filename));
             }
 
-            let inf_path =
-                theme_dir.join("install.inf");
+            let inf_path = theme_dir.join("install.inf");
 
-            fs::write(
-                &inf_path,
-                inf
-            )
-            .map_err(|e| {
-                format!(
-                    "Failed to create install.inf: {e}"
-                )
-            })?;
+            fs::write(&inf_path, inf).map_err(|e| format!("Failed to create install.inf: {e}"))?;
 
-            println!(
-                "Created: {}",
-                inf_path.display()
-            );
+            println!("Created: {}", inf_path.display());
 
             Ok(extracted_cursors.len())
         })();
 
         match import_result {
             Ok(count) => {
-                println!(
-                    "Imported {} cursor(s) from {}",
-                    count,
-                    pack_name
-                );
+                println!("Imported {} cursor(s) from {}", count, pack_name);
 
                 // Delete .cursepack only after EVERYTHING
                 // succeeded, including install.inf creation.
-                if let Err(error) =
-                    fs::remove_file(&pack_path)
-                {
-                    eprintln!(
-                        "Couldn't delete {}: {}",
-                        pack_path.display(),
-                        error
-                    );
+                if let Err(error) = fs::remove_file(&pack_path) {
+                    eprintln!("Couldn't delete {}: {}", pack_path.display(), error);
                 }
             }
 
             Err(error) => {
-                eprintln!(
-                    "Failed to import {}: {}",
-                    pack_name,
-                    error
-                );
+                eprintln!("Failed to import {}: {}", pack_name, error);
 
                 // Remove incomplete theme.
-                let _ =
-                    fs::remove_dir_all(&theme_dir);
+                let _ = fs::remove_dir_all(&theme_dir);
 
                 // Leave original .cursepack untouched.
             }
@@ -535,23 +442,11 @@ fn list_cursor_themes(
 
     let mut themes = Vec::new();
 
-    for entry in fs::read_dir(&cursor_dir)
-        .map_err(|e| e.to_string())?
-    {
-        let entry =
-            entry.map_err(|e| e.to_string())?;
+    for entry in fs::read_dir(&cursor_dir).map_err(|e| e.to_string())? {
+        let entry = entry.map_err(|e| e.to_string())?;
 
-        if entry
-            .file_type()
-            .map_err(|e| e.to_string())?
-            .is_dir()
-        {
-            themes.push(
-                entry
-                    .file_name()
-                    .to_string_lossy()
-                    .into_owned()
-            );
+        if entry.file_type().map_err(|e| e.to_string())?.is_dir() {
+            themes.push(entry.file_name().to_string_lossy().into_owned());
         }
     }
 
@@ -572,8 +467,7 @@ fn color_to_hex(color: windows::UI::Color) -> String {
 fn get_accent_palette() -> Result<Vec<String>, String> {
     #[cfg(target_os = "windows")]
     {
-        let settings = UISettings::new()
-            .map_err(|e| e.to_string())?;
+        let settings = UISettings::new().map_err(|e| e.to_string())?;
 
         let colors = [
             UIColorType::AccentDark3,
@@ -730,6 +624,7 @@ fn encode_png(width: u32, height: u32, pixels: &[u8]) -> Result<Vec<u8>, String>
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_shell::init())
         .setup(|app| {

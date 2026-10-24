@@ -7,6 +7,7 @@
   --sidebarBGHighlight-dark: rgba(255, 255, 255, 0.2);
   --sidebarBGHighlightClick-light: rgba(0, 0, 0, 0.2);
   --sidebarBGHighlightClick-dark: rgba(255, 255, 255, 0.2);
+  /* Just a placeholder */
 }
 
 html,
@@ -28,10 +29,20 @@ body {
 
   --sidebarWidth: 72px;
 
+  p#curCountInfo {
+    bottom: 0;
+    margin: 8px;
+    opacity: 0.5;
+    font-size: 10px;
+    text-align: center;
+    position: absolute;
+    float: right;
+  }
+
   div#main-container {
     float: right;
     display: block;
-    width: calc(100% - 4px - var(--sidebarWidth));
+    width: calc(100% - 8px - var(--sidebarWidth));
     height: 100%;
 
     div#main {
@@ -49,6 +60,7 @@ body {
       }
 
       div#curPreview-container {
+        outline: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 6px;
         width: 100%;
         background: rgba(255, 255, 255, 0.05);
@@ -106,8 +118,9 @@ body {
         }
       }
 
-      div#curseInfo1 {
+      div#curseInfoStart {
         display: block;
+        outline: 1px solid rgba(255, 255, 255, 0.1);
         background: rgba(255, 255, 255, 0.05);
         padding: 14px 4px 10px 4px;
         margin: 20px;
@@ -139,8 +152,9 @@ body {
         }
       }
 
-      div#curseInfo2 {
+      div#curseInfoEnd {
         display: block;
+        outline: 1px solid rgba(255, 255, 255, 0.1);
         background: rgba(255, 255, 255, 0.05);
         padding: 10px 4px 12px 4px;
         margin: 20px;
@@ -167,19 +181,73 @@ body {
     width: var(--sidebarWidth);
     height: 100%;
 
+    div#sidebar {
+      &[openTab="themes"] {
+        .themes-button {
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          background: rgba(255, 255, 255, 0.05);
+
+          @media (prefers-color-scheme: light) {
+            background: rgba(0, 0, 0, 0.05);
+          }
+        }
+
+        div#sidebar-highlighter {
+          margin-top: 15px;
+        }
+      }
+
+      &[openTab="about"] {
+        .info-button {
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          background: rgba(255, 255, 255, 0.05);
+
+          @media (prefers-color-scheme: light) {
+            background: rgba(0, 0, 0, 0.05);
+          }
+        }
+
+        div#sidebar-highlighter {
+          margin-top: 92px;
+        }
+      }
+
+      margin-top: 8px;
+    }
+
+    div#sidebar-highlighter {
+      width: 4px;
+      height: 36px;
+      margin-left: 2px;
+      background: var(--accent-brighter);
+
+      @media (prefers-color-scheme: light) {
+        background: var(--accent-darker);
+      }
+
+      transition: 0.1s ease-in-out;
+      border-radius: 6px;
+      position: absolute;
+      display: block;
+      float: right;
+    }
+
     div#sidebar-button {
+      border-top: 1px solid transparent;
       margin: 2px;
-      border-radius: 14px;
+      margin-bottom: 8px;
+      border-radius: 6px;
       display: inline-block;
       width: 100%;
-      height: 78px;
-      transition: 0.2s ease-in-out;
+      height: 66px;
+      transition: 0.05s ease-in;
 
       &:hover {
-        background: var(--sidebarBGHighlight-dark);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.1) !important;
 
         @media (prefers-color-scheme: light) {
-          background: var(--sidebarBGHighlight-light);
+          background: rgba(0, 0, 0, 0.1) !important;
         }
 
         >* {
@@ -188,10 +256,11 @@ body {
       }
 
       &:active {
-        background: var(--sidebarBGHighlightClick-dark);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
 
         @media (prefers-color-scheme: light) {
-          background: var(--sidebarBGHighlightClick-light);
+          background: rgba(0, 0, 0, 0.05);
         }
       }
 
@@ -202,9 +271,12 @@ body {
       }
 
       p#sidebar-label {
-        user-select: none;
         display: flex;
         justify-content: center;
+        font-size: 13px;
+        font-weight: 450;
+        user-select: none;
+        transform: translateY(-25%);
       }
     }
   }

@@ -2,6 +2,7 @@ const { invoke } = window.__TAURI__.core;
 const { openPath } = window.__TAURI__.opener;
 const { appDataDir, join } = window.__TAURI__.path;
 const { Command } = window.__TAURI__.shell;
+const { relaunch } = window.__TAURI__.process;
 
 // Keep one Blob URL per <img>.
 const previewUrls = new WeakMap();
@@ -115,6 +116,7 @@ async function loadCursorThemes() {
   ];
 
   const themeCount = themes.length;
+  document.getElementById("curCount").innerText=themeCount;
   var themeCounter = 0;
   for (const theme of themes) {
     console.log("Creating preview for:", theme);
@@ -200,6 +202,10 @@ async function loadCursorThemes() {
     console.log(themeCounter)
     if (themeCounter == themeCount) {
       themeList.classList.add("loaded");
+      var cursorDirButton = document.createElement("button");
+      cursorDirButton.id = "cursorDir-button";
+      cursorDirButton.innerText = "Cursor Folder";
+      themeList.prepend(cursorDirButton);
       document.getElementById("loading").remove();
     }
   }
@@ -225,6 +231,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   document
     .querySelector(".themes-button")
     .addEventListener("click", async () => {
+      document.getElementById("sidebar").setAttribute("openTab","themes")
       document.getElementById("main").innerHTML = '<p id="loading">Loading...</p><div id="cursorThemes"></div>'
       try {
         await loadCursorThemes();
@@ -234,28 +241,20 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
 
   document
-    .querySelector(".settings-button")
-    .addEventListener("click", async () => {
-      const html = `
-      <div id="curseSettings"><button id="cursorDir-button">Cursor Folder</button></div>
-      `
-      document.getElementById("main").innerHTML = html
-    });
-
-  document
     .querySelector(".info-button")
     .addEventListener("click", async () => {
+      document.getElementById("sidebar").setAttribute("openTab","about")
       const html = `
-      <div id="curseInfo1">
+      <div id="curseInfoStart">
         <div id="curseIconContainer">
-          <img id="curseIcon" src="./icon.svg" />
+          <img id="curseIcon" src="./icon.png" />
         </div>
         <div id="curseInfoText">
           <p id="appName">Curses Cursor Manager</p>
           <p id="appSubtitle">Made out of necessity, boredom, and "Why in curses doesn't this already exist?".</p>
         </div>
       </div>
-      <div id="curseInfo2">
+      <div id="curseInfoEnd">
         <div id="curseInfoText">
           <p id="copyright">&#169; KiCKTheBucket, Robert E. Reyes</p>
         </div>

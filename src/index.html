@@ -36,6 +36,11 @@
       <path
         d="M320 576C461.4 576 576 461.4 576 320C576 178.6 461.4 64 320 64C178.6 64 64 178.6 64 320C64 461.4 178.6 576 320 576zM288 224C288 206.3 302.3 192 320 192C337.7 192 352 206.3 352 224C352 241.7 337.7 256 320 256C302.3 256 288 241.7 288 224zM280 288L328 288C341.3 288 352 298.7 352 312L352 400L360 400C373.3 400 384 410.7 384 424C384 437.3 373.3 448 360 448L280 448C266.7 448 256 437.3 256 424C256 410.7 266.7 400 280 400L304 400L304 336L280 336C266.7 336 256 325.3 256 312C256 298.7 266.7 288 280 288z" />
     </symbol>
+    <symbol viewBox="0 0 640 640" id="pointer">
+      <!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+      <path
+        d="M173.3 66.5C181.4 62.4 191.2 63.3 198.4 68.8L518.4 308.7C526.7 314.9 530 325.7 526.8 335.5C523.6 345.3 514.4 351.9 504 351.9L351.7 351.9L440.6 529.6C448.5 545.4 442.1 564.6 426.3 572.5C410.5 580.4 391.3 574 383.4 558.2L294.5 380.5L203.2 502.3C197 510.6 186.2 513.9 176.4 510.7C166.6 507.5 160 498.3 160 488L160 88C160 78.9 165.1 70.6 173.3 66.5z" />
+    </symbol>
   </svg>
   <div id="main-container">
     <div id="main">
@@ -44,24 +49,16 @@
     </div>
   </div>
   <div id="sidebar-container">
-    <div id="sidebar">
+    <div id="sidebar" openTab="themes">
+      <div id="sidebar-highlighter"></div>
       <div id="sidebar-button" class="themes-button">
         <div id="sidebar-icon">
           <svg id="icon">
-            <use href="#palette" />
+            <use href="#pointer" />
           </svg>
         </div>
-        <p id="sidebar-label">Themes</p>
+        <p id="sidebar-label">Cursors</p>
       </div>
-      <div id="sidebar-button" class="settings-button">
-        <div id="sidebar-icon">
-          <svg id="icon">
-            <use href="#gears" />
-          </svg>
-        </div>
-        <p id="sidebar-label">Config</p>
-      </div>
-
       <div id="sidebar-button" class="info-button">
         <div id="sidebar-icon">
           <svg id="icon">
@@ -72,6 +69,7 @@
       </div>
     </div>
   </div>
+  <p id="curCountInfo">Cursors: <span id="curCount"></span></p>
 </body>
 
 </html>

@@ -7,6 +7,7 @@
   --sidebarBGHighlight-dark: rgba(255, 255, 255, 0.2);
   --sidebarBGHighlightClick-light: rgba(0, 0, 0, 0.2);
   --sidebarBGHighlightClick-dark: rgba(255, 255, 255, 0.2);
+  /* Just a placeholder */
 }
 
 html,
@@ -32,11 +33,21 @@ html,
 body {
   --sidebarWidth: 72px;
 }
+html p#curCountInfo,
+body p#curCountInfo {
+  bottom: 0;
+  margin: 8px;
+  opacity: 0.5;
+  font-size: 10px;
+  text-align: center;
+  position: absolute;
+  float: right;
+}
 html div#main-container,
 body div#main-container {
   float: right;
   display: block;
-  width: calc(100% - 4px - var(--sidebarWidth));
+  width: calc(100% - 8px - var(--sidebarWidth));
   height: 100%;
 }
 html div#main-container div#main,
@@ -56,6 +67,7 @@ body div#main-container div#main div#cursorThemes.loaded {
 }
 html div#main-container div#main div#curPreview-container,
 body div#main-container div#main div#curPreview-container {
+  outline: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   width: 100%;
   background: rgba(255, 255, 255, 0.05);
@@ -122,54 +134,56 @@ html div#main-container div#main div#curPreview-container div#curPreview-content
 body div#main-container div#main div#curPreview-container div#curPreview-content div#curPreviews img.cursor-preview {
   width: 32px;
 }
-html div#main-container div#main div#curseInfo1,
-body div#main-container div#main div#curseInfo1 {
+html div#main-container div#main div#curseInfoStart,
+body div#main-container div#main div#curseInfoStart {
   display: block;
+  outline: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.05);
   padding: 14px 4px 10px 4px;
   margin: 20px;
   margin-bottom: 6px;
   border-radius: 6px 6px 0 0;
 }
-html div#main-container div#main div#curseInfo1 div#curseIconContainer,
-body div#main-container div#main div#curseInfo1 div#curseIconContainer {
+html div#main-container div#main div#curseInfoStart div#curseIconContainer,
+body div#main-container div#main div#curseInfoStart div#curseIconContainer {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-html div#main-container div#main div#curseInfo1 div#curseIconContainer img,
-body div#main-container div#main div#curseInfo1 div#curseIconContainer img {
+html div#main-container div#main div#curseInfoStart div#curseIconContainer img,
+body div#main-container div#main div#curseInfoStart div#curseIconContainer img {
   width: 128px;
 }
-html div#main-container div#main div#curseInfo1 div#curseInfoText,
-body div#main-container div#main div#curseInfo1 div#curseInfoText {
+html div#main-container div#main div#curseInfoStart div#curseInfoText,
+body div#main-container div#main div#curseInfoStart div#curseInfoText {
   text-align: center;
 }
-html div#main-container div#main div#curseInfo1 div#curseInfoText p#appName,
-body div#main-container div#main div#curseInfo1 div#curseInfoText p#appName {
+html div#main-container div#main div#curseInfoStart div#curseInfoText p#appName,
+body div#main-container div#main div#curseInfoStart div#curseInfoText p#appName {
   font-size: large;
   line-height: 0;
 }
-html div#main-container div#main div#curseInfo1 div#curseInfoText p#appSubtitle,
-body div#main-container div#main div#curseInfo1 div#curseInfoText p#appSubtitle {
+html div#main-container div#main div#curseInfoStart div#curseInfoText p#appSubtitle,
+body div#main-container div#main div#curseInfoStart div#curseInfoText p#appSubtitle {
   margin: 0;
   font-size: small;
 }
-html div#main-container div#main div#curseInfo2,
-body div#main-container div#main div#curseInfo2 {
+html div#main-container div#main div#curseInfoEnd,
+body div#main-container div#main div#curseInfoEnd {
   display: block;
+  outline: 1px solid rgba(255, 255, 255, 0.1);
   background: rgba(255, 255, 255, 0.05);
   padding: 10px 4px 12px 4px;
   margin: 20px;
   margin-top: 6px;
   border-radius: 0 0 6px 6px;
 }
-html div#main-container div#main div#curseInfo2 div#curseInfoText,
-body div#main-container div#main div#curseInfo2 div#curseInfoText {
+html div#main-container div#main div#curseInfoEnd div#curseInfoText,
+body div#main-container div#main div#curseInfoEnd div#curseInfoText {
   text-align: center;
 }
-html div#main-container div#main div#curseInfo2 div#curseInfoText p#copyright,
-body div#main-container div#main div#curseInfo2 div#curseInfoText p#copyright {
+html div#main-container div#main div#curseInfoEnd div#curseInfoText p#copyright,
+body div#main-container div#main div#curseInfoEnd div#curseInfoText p#copyright {
   margin: 0;
   font-size: small;
   opacity: 0.5;
@@ -182,23 +196,81 @@ body div#sidebar-container {
   width: var(--sidebarWidth);
   height: 100%;
 }
+html div#sidebar-container div#sidebar[openTab=themes] .themes-button,
+body div#sidebar-container div#sidebar[openTab=themes] .themes-button {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+}
+@media (prefers-color-scheme: light) {
+  html div#sidebar-container div#sidebar[openTab=themes] .themes-button,
+  body div#sidebar-container div#sidebar[openTab=themes] .themes-button {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+html div#sidebar-container div#sidebar[openTab=themes] div#sidebar-highlighter,
+body div#sidebar-container div#sidebar[openTab=themes] div#sidebar-highlighter {
+  margin-top: 15px;
+}
+html div#sidebar-container div#sidebar[openTab=about] .info-button,
+body div#sidebar-container div#sidebar[openTab=about] .info-button {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+}
+@media (prefers-color-scheme: light) {
+  html div#sidebar-container div#sidebar[openTab=about] .info-button,
+  body div#sidebar-container div#sidebar[openTab=about] .info-button {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+html div#sidebar-container div#sidebar[openTab=about] div#sidebar-highlighter,
+body div#sidebar-container div#sidebar[openTab=about] div#sidebar-highlighter {
+  margin-top: 92px;
+}
+html div#sidebar-container div#sidebar,
+body div#sidebar-container div#sidebar {
+  margin-top: 8px;
+}
+html div#sidebar-container div#sidebar-highlighter,
+body div#sidebar-container div#sidebar-highlighter {
+  width: 4px;
+  height: 36px;
+  margin-left: 2px;
+  background: var(--accent-brighter);
+}
+@media (prefers-color-scheme: light) {
+  html div#sidebar-container div#sidebar-highlighter,
+  body div#sidebar-container div#sidebar-highlighter {
+    background: var(--accent-darker);
+  }
+}
+html div#sidebar-container div#sidebar-highlighter,
+body div#sidebar-container div#sidebar-highlighter {
+  transition: 0.1s ease-in-out;
+  border-radius: 6px;
+  position: absolute;
+  display: block;
+  float: right;
+}
 html div#sidebar-container div#sidebar-button,
 body div#sidebar-container div#sidebar-button {
+  border-top: 1px solid transparent;
   margin: 2px;
-  border-radius: 14px;
+  margin-bottom: 8px;
+  border-radius: 6px;
   display: inline-block;
   width: 100%;
-  height: 78px;
-  transition: 0.2s ease-in-out;
+  height: 66px;
+  transition: 0.05s ease-in;
 }
 html div#sidebar-container div#sidebar-button:hover,
 body div#sidebar-container div#sidebar-button:hover {
-  background: var(--sidebarBGHighlight-dark);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 @media (prefers-color-scheme: light) {
   html div#sidebar-container div#sidebar-button:hover,
   body div#sidebar-container div#sidebar-button:hover {
-    background: var(--sidebarBGHighlight-light);
+    background: rgba(0, 0, 0, 0.1) !important;
   }
 }
 html div#sidebar-container div#sidebar-button:hover > *,
@@ -207,12 +279,13 @@ body div#sidebar-container div#sidebar-button:hover > * {
 }
 html div#sidebar-container div#sidebar-button:active,
 body div#sidebar-container div#sidebar-button:active {
-  background: var(--sidebarBGHighlightClick-dark);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
 }
 @media (prefers-color-scheme: light) {
   html div#sidebar-container div#sidebar-button:active,
   body div#sidebar-container div#sidebar-button:active {
-    background: var(--sidebarBGHighlightClick-light);
+    background: rgba(0, 0, 0, 0.05);
   }
 }
 html div#sidebar-container div#sidebar-button div#sidebar-icon,
@@ -223,9 +296,12 @@ body div#sidebar-container div#sidebar-button div#sidebar-icon {
 }
 html div#sidebar-container div#sidebar-button p#sidebar-label,
 body div#sidebar-container div#sidebar-button p#sidebar-label {
+  display: flex;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 450;
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
-  display: flex;
-  justify-content: center;
+  transform: translateY(-25%);
 }/*# sourceMappingURL=styles.css.map */

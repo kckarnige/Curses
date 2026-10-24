@@ -26,6 +26,8 @@
         }
       ]
     },
-    "store:default"
+    "store:default",
+    "process:allow-restart",
+    "process:default"
   ]
 }
