@@ -65,6 +65,49 @@ body div#main-container div#main div#cursorThemes.loaded {
   opacity: 1;
   pointer-events: initial;
 }
+html div#main-container div#main button#cursorDir-button,
+body div#main-container div#main button#cursorDir-button {
+  height: 48px;
+  border: none;
+  outline: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  width: 132px;
+  color: white;
+  background: rgba(255, 255, 255, 0.05);
+  transition: 0.2s ease-in-out;
+  text-align: right;
+  padding: 0 8px;
+}
+@media (prefers-color-scheme: light) {
+  html div#main-container div#main button#cursorDir-button,
+  body div#main-container div#main button#cursorDir-button {
+    color: black;
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+html div#main-container div#main button#cursorDir-button:hover,
+body div#main-container div#main button#cursorDir-button:hover {
+  background: var(--cursePreviewHighlight-dark);
+}
+@media (prefers-color-scheme: light) {
+  html div#main-container div#main button#cursorDir-button:hover,
+  body div#main-container div#main button#cursorDir-button:hover {
+    background: var(--cursePreviewHighlight-light);
+  }
+}
+html div#main-container div#main button#cursorDir-button:hover > *,
+body div#main-container div#main button#cursorDir-button:hover > * {
+  opacity: 0.9;
+}
+html div#main-container div#main button#cursorDir-button svg#icon,
+body div#main-container div#main button#cursorDir-button svg#icon {
+  fill: currentColor;
+  width: 24px;
+  height: 24px;
+  display: inline;
+  float: left;
+  margin: 9px 2px;
+}
 html div#main-container div#main div#curPreview-container,
 body div#main-container div#main div#curPreview-container {
   outline: 1px solid rgba(255, 255, 255, 0.1);
@@ -211,6 +254,21 @@ html div#sidebar-container div#sidebar[openTab=themes] div#sidebar-highlighter,
 body div#sidebar-container div#sidebar[openTab=themes] div#sidebar-highlighter {
   margin-top: 15px;
 }
+html div#sidebar-container div#sidebar[openTab=packager] .packager-button,
+body div#sidebar-container div#sidebar[openTab=packager] .packager-button {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+}
+@media (prefers-color-scheme: light) {
+  html div#sidebar-container div#sidebar[openTab=packager] .packager-button,
+  body div#sidebar-container div#sidebar[openTab=packager] .packager-button {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+html div#sidebar-container div#sidebar[openTab=packager] div#sidebar-highlighter,
+body div#sidebar-container div#sidebar[openTab=packager] div#sidebar-highlighter {
+  margin-top: 92px;
+}
 html div#sidebar-container div#sidebar[openTab=about] .info-button,
 body div#sidebar-container div#sidebar[openTab=about] .info-button {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -224,7 +282,7 @@ body div#sidebar-container div#sidebar[openTab=about] .info-button {
 }
 html div#sidebar-container div#sidebar[openTab=about] div#sidebar-highlighter,
 body div#sidebar-container div#sidebar[openTab=about] div#sidebar-highlighter {
-  margin-top: 92px;
+  margin-top: 169px;
 }
 html div#sidebar-container div#sidebar,
 body div#sidebar-container div#sidebar {

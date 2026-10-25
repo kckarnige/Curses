@@ -59,6 +59,45 @@ body {
         }
       }
 
+      button#cursorDir-button {
+        height: 48px;
+        border: none;
+        outline: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        width: 132px;
+        color: white;
+        background: rgba(255, 255, 255, 0.05);
+        transition: 0.2s ease-in-out;
+        text-align: right;
+        padding: 0 8px;
+
+        @media (prefers-color-scheme: light) {
+          color: black;
+          background: rgba(0, 0, 0, 0.05);
+        }
+
+        &:hover {
+          background: var(--cursePreviewHighlight-dark);
+
+          @media (prefers-color-scheme: light) {
+            background: var(--cursePreviewHighlight-light);
+          }
+
+          >* {
+            opacity: 0.9;
+          }
+        }
+
+        svg#icon {
+          fill: currentColor;
+          width: 24px;
+          height: 24px;
+          display: inline;
+          float: left;
+          margin: 9px 2px;
+        }
+      }
+
       div#curPreview-container {
         outline: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 6px;
@@ -197,6 +236,21 @@ body {
         }
       }
 
+      &[openTab="packager"] {
+        .packager-button {
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
+          background: rgba(255, 255, 255, 0.05);
+
+          @media (prefers-color-scheme: light) {
+            background: rgba(0, 0, 0, 0.05);
+          }
+        }
+
+        div#sidebar-highlighter {
+          margin-top: 92px;
+        }
+      }
+
       &[openTab="about"] {
         .info-button {
           border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -208,7 +262,7 @@ body {
         }
 
         div#sidebar-highlighter {
-          margin-top: 92px;
+          margin-top: 169px;
         }
       }
 

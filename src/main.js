@@ -116,7 +116,7 @@ async function loadCursorThemes() {
   ];
 
   const themeCount = themes.length;
-  document.getElementById("curCount").innerText=themeCount;
+  document.getElementById("curCount").innerText = themeCount;
   var themeCounter = 0;
   for (const theme of themes) {
     console.log("Creating preview for:", theme);
@@ -202,10 +202,6 @@ async function loadCursorThemes() {
     console.log(themeCounter)
     if (themeCounter == themeCount) {
       themeList.classList.add("loaded");
-      var cursorDirButton = document.createElement("button");
-      cursorDirButton.id = "cursorDir-button";
-      cursorDirButton.innerText = "Cursor Folder";
-      themeList.prepend(cursorDirButton);
       document.getElementById("loading").remove();
     }
   }
@@ -231,7 +227,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   document
     .querySelector(".themes-button")
     .addEventListener("click", async () => {
-      document.getElementById("sidebar").setAttribute("openTab","themes")
+      document.getElementById("sidebar").setAttribute("openTab", "themes")
       document.getElementById("main").innerHTML = '<p id="loading">Loading...</p><div id="cursorThemes"></div>'
       try {
         await loadCursorThemes();
@@ -241,13 +237,22 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
 
   document
+    .querySelector(".packager-button")
+    .addEventListener("click", async () => {
+      document.getElementById("sidebar").setAttribute("openTab", "packager")
+      const html = `
+      `
+      document.getElementById("main").innerHTML = html
+    });
+
+  document
     .querySelector(".info-button")
     .addEventListener("click", async () => {
-      document.getElementById("sidebar").setAttribute("openTab","about")
+      document.getElementById("sidebar").setAttribute("openTab", "about")
       const html = `
       <div id="curseInfoStart">
         <div id="curseIconContainer">
-          <img id="curseIcon" src="./icon.png" />
+          <img id="curseIcon" src="./icon.svg" />
         </div>
         <div id="curseInfoText">
           <p id="appName">Curses Cursor Manager</p>
@@ -256,18 +261,18 @@ window.addEventListener("DOMContentLoaded", async () => {
       </div>
       <div id="curseInfoEnd">
         <div id="curseInfoText">
-          <p id="copyright">&#169; KiCKTheBucket, Robert E. Reyes</p>
+          <p id="copyright">&#169; KiCKinTheBucket, Robert E. Reyes</p>
         </div>
       </div>
       `
       document.getElementById("main").innerHTML = html
     });
 
-try {
-  await loadCursorThemes();
-} catch (error) {
-  console.error("Failed to load cursor themes:", error);
-}
+  //try {
+  //  await loadCursorThemes();
+  //} catch (error) {
+  //  console.error("Failed to load cursor themes:", error);
+  //}
 });
 
 var palette = await invoke("get_accent_palette");
