@@ -241,6 +241,11 @@ window.addEventListener("DOMContentLoaded", async () => {
     .addEventListener("click", async () => {
       document.getElementById("sidebar").setAttribute("openTab", "packager")
       const html = `
+      <div id="cursorPackager">
+        <button id="cursorDir-button">
+          <svg id="icon"><use href="#folder" /></svg><p>Cursor Folder</p>
+        </button>
+      </div>
       `
       document.getElementById("main").innerHTML = html
     });
@@ -259,20 +264,49 @@ window.addEventListener("DOMContentLoaded", async () => {
           <p id="appSubtitle">Made out of necessity, boredom, and "Why in curses doesn't this already exist?".</p>
         </div>
       </div>
+      <div id="curseInfoMid">
+        <div id="curseInfoText">
+          <p>
+            <span> </span>
+            <span id="header">Why use this when MouseX exists?</span>
+            <br><br>
+
+            &#8226; MouseX uses it's own rendering engine for it's cursor, which is great for the features they provide, but most cursors available for download don't really use them. On top of that, most cursors are just ports of cursors made for native Windows, which sort-of defeats the whole purpose of buying the software to begin with, unless you're <i>IMMEASURABLY</i> lazy and want to just hit "Subscribe" and forget about it, which is understandable.
+            <br><br>
+            &#8226; Unlike a native Windows cursor, since MouseX isn't loaded on system startup, your set cursor only applies when you sign-in, which isn't really a problem, but it would just make your system feel inconsistent, especially if you go crazy with Wallpaper Engine
+            <br><br>
+            &#8226; If you have a cursor pack you found online with a \`install.inf\` file, there's a high-likelyhood it will work with Curses.
+            <br><br>
+            &#8226; In a perfect universe, if your cursor is packed as a \`.cursepack\`, you can be sure it's safe, compared to a random Steam Workshop download, or shady looking \`install.inf\` file.
+            <br><br>
+            &#8226; It'll save you 3 bucks.
+        </div>
+      </div>
+      <div id="curseInfoMid">
+        <div id="curseInfoText">
+          <p>
+            <span> </span>
+            <span id="header">Why do you hate MouseX so much?</span>
+            <br><br>
+
+            <b>I don't!</b> I actually bought it, and it's a great piece of software, I'm just a nut who likes his stuff a certain way, and at least for my personal preferences, MouseX just doesn't make sense; I just like my stuff functioning as close to native as possible, like how Wallpaper Engine just sits behind your desktop icons as if it were always a feature, but can't show wallpapers on the lock screen, but gives you the option to capture a screenshot of the wallpaper as a work-around. That being said, if you haven't checked out MouseX, you can find it on Steam.</p>
+        </div>
+      </div>
       <div id="curseInfoEnd">
         <div id="curseInfoText">
           <p id="copyright">&#169; KiCKinTheBucket, Robert E. Reyes</p>
         </div>
       </div>
+      <br>
       `
       document.getElementById("main").innerHTML = html
     });
 
-  //try {
-  //  await loadCursorThemes();
-  //} catch (error) {
-  //  console.error("Failed to load cursor themes:", error);
-  //}
+  try {
+    await loadCursorThemes();
+  } catch (error) {
+    console.error("Failed to load cursor themes:", error);
+  }
 });
 
 var palette = await invoke("get_accent_palette");
