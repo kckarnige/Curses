@@ -1,8 +1,11 @@
+import { showContextMenu } from "./contextmenu_helper.js";
 const { invoke } = window.__TAURI__.core;
 const { openPath } = window.__TAURI__.opener;
 const { appDataDir, join } = window.__TAURI__.path;
 const { Command } = window.__TAURI__.shell;
 const { relaunch } = window.__TAURI__.process;
+const { readTextFile } = window.__TAURI__.fs;
+
 
 // Keep one Blob URL per <img>.
 const previewUrls = new WeakMap();
@@ -128,8 +131,6 @@ async function loadCursorThemes() {
 
     element.innerHTML = `
       <div id="curPreview-content" theme="${theme}">
-        <p id="curName"></p>
-
         <div id="curPreviews">
           <img id="cursor1" class="cursor-preview" />
           <img id="cursor2" class="cursor-preview" />
@@ -138,10 +139,54 @@ async function loadCursorThemes() {
           <img id="cursor5" class="cursor-preview" />
           <img id="cursor6" class="cursor-preview" />
         </div>
+        <p id="curName"></p>
       </div>
     `;
 
-    element.querySelector("#curName").innerText = theme;
+    try {
+      const metadataPath = await join(await getCursorDirectory(), theme, "pack-info.json");
+      const metadataJSON = JSON.parse(await readTextFile(metadataPath))
+      console.log(metadataJSON.name)
+      element.querySelector("#curName").innerText = metadataJSON.name;
+      if (metadataJSON.author.name != (null || undefined || "")) {
+        element.querySelector("#curName").innerText += " by " + metadataJSON.author.name
+      }
+    } catch (error) {
+      console.error("This theme doesn't seem to have metadata. Using folder name instead.\n\nMore Info:" + error)
+      element.querySelector("#curName").innerText = theme;
+    }
+
+    element.addEventListener("contextmenu", async (event) => {
+      try {
+        const selected = await showContextMenu(event, [
+          { id: "apply", label: "Apply theme" },
+          { id: "open", label: "Open folder" },
+          { type: "separator" },
+          { id: "export", label: "Export Cursepack" },
+          { id: "delete", label: "Delete" }
+        ]);
+
+        switch (selected) {
+          case "apply":
+            applyTheme(theme);
+            break;
+
+          case "open":
+            openThemeFolder(theme);
+            break;
+
+          case "export":
+            exportTheme(theme);
+            break;
+
+          case "delete":
+            deleteTheme(theme);
+            break;
+        }
+      } catch (error) {
+        console.error("Context menu failed:", error);
+      }
+    });
 
     themeList.appendChild(element);
 

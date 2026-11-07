@@ -1,0 +1,17 @@
+[package]
+name = "cursepack"
+version = "0.3.0"
+edition = "2021"
+description = "Rust library for the Cursepack v0.3 lossless animated-WebP cursor theme format"
+license = "MIT"
+
+[dependencies]
+image = { version = "0.25", default-features = false, features = ["png"] }
+regex = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+webp-animation = "0.10"
+tempfile = "3"
+thiserror = "2"
+
+[dev-dependencies]

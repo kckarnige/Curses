@@ -113,15 +113,24 @@ body div#main-container div#main button#cursorDir-button svg#icon {
 }
 html div#main-container div#main p#loading,
 body div#main-container div#main p#loading {
+  position: relative;
+  margin-top: 32px;
   font-size: 18px;
   text-align: center;
   opacity: 0.5;
 }
 html div#main-container div#main div#curPreview-container,
 body div#main-container div#main div#curPreview-container {
+  position: relative;
+  margin-bottom: 6px;
+  display: block;
+  float: right;
+  right: 50%;
+  transform: translateX(50%);
+  padding: 0 6px;
   outline: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
-  width: 100%;
+  width: 70%;
   background: rgba(255, 255, 255, 0.05);
   transition: 0.2s ease-in-out;
 }
@@ -157,30 +166,31 @@ body div#main-container div#main div#curPreview-container:active {
 }
 html div#main-container div#main div#curPreview-container div#curPreview-content,
 body div#main-container div#main div#curPreview-container div#curPreview-content {
+  display: block;
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
-  margin: 0;
+  margin-right: 2px;
+  margin: 16px 8px;
+  width: 100%;
   height: 64px;
 }
 html div#main-container div#main div#curPreview-container div#curPreview-content p#curName,
 body div#main-container div#main div#curPreview-container div#curPreview-content p#curName {
-  font-size: 20px;
-  margin: 8px 16px 0 16px;
+  display: block;
+  margin: 0;
+  text-align: center;
+  padding-top: 12px;
+  font-size: 16px;
   height: -moz-fit-content;
   height: fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  top: 50%;
-  transform: translateY(65%);
 }
 html div#main-container div#main div#curPreview-container div#curPreview-content div#curPreviews,
 body div#main-container div#main div#curPreview-container div#curPreview-content div#curPreviews {
-  margin: 0;
-  margin-right: 10px;
-  top: 50%;
-  transform: translateY(-35%);
-  float: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
 }
 html div#main-container div#main div#curPreview-container div#curPreview-content div#curPreviews img.cursor-preview,
 body div#main-container div#main div#curPreview-container div#curPreview-content div#curPreviews img.cursor-preview {

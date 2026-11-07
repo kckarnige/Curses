@@ -1,7 +1,8 @@
-use std::{collections::HashMap, fs, path::Path};
-
+use cursepack::{decode_theme, inspect};
 use oxideav_ico::{read_ani, read_ico, select_largest};
+use std::{collections::HashMap, fs, path::Path, path::PathBuf};
 use tauri::Manager;
+mod commands;
 
 #[cfg(target_os = "windows")]
 use window_vibrancy::apply_mica;
@@ -221,14 +222,6 @@ fn read_cursor_inf(path: String) -> Result<HashMap<String, String>, String> {
 
 #[tauri::command]
 fn list_cursor_themes(app: tauri::AppHandle) -> Result<Vec<String>, String> {
-    use std::{
-        fs::{self, File},
-        io,
-        path::{Path, PathBuf},
-    };
-
-    use zip::ZipArchive;
-
     // Canonical filename -> Windows cursor role
     const CURSOR_NAMES: &[(&str, &str)] = &[
         ("arrow", "Arrow"),
@@ -258,6 +251,14 @@ fn list_cursor_themes(app: tauri::AppHandle) -> Result<Vec<String>, String> {
 
     fs::create_dir_all(&cursor_dir).map_err(|e| e.to_string())?;
 
+    let packcache_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| e.to_string())?
+        .join("cursepack-cache");
+
+    fs::create_dir_all(&packcache_dir).map_err(|e| e.to_string())?;
+
     // --------------------------------
     // Find .cursepack files
     // --------------------------------
@@ -275,7 +276,6 @@ fn list_cursor_themes(app: tauri::AppHandle) -> Result<Vec<String>, String> {
 
         let extension = path.extension().and_then(|ext| ext.to_str()).unwrap_or("");
 
-        // ONLY .cursepack
         if extension.eq_ignore_ascii_case("cursepack") {
             packs.push(path);
         }
@@ -297,80 +297,33 @@ fn list_cursor_themes(app: tauri::AppHandle) -> Result<Vec<String>, String> {
         // Don't overwrite an existing theme.
         if theme_dir.exists() {
             eprintln!("Theme already exists: {}", pack_name);
-
             continue;
         }
 
         let import_result: Result<usize, String> = (|| {
-            let file = File::open(&pack_path).map_err(|e| e.to_string())?;
+            // --------------------------------
+            // Inspect the Cursepack
+            // --------------------------------
 
-            // .cursepack is ZIP internally.
-            let mut archive =
-                ZipArchive::new(file).map_err(|e| format!("Invalid .cursepack: {e}"))?;
+            let metadata = inspect(&pack_path).map_err(|e| format!("Invalid .cursepack: {e}"))?;
 
-            fs::create_dir_all(&theme_dir).map_err(|e| e.to_string())?;
-
-            // Keep track of the files we extracted so
-            // we can generate install.inf afterward.
-            let mut extracted_cursors: Vec<(String, String, String)> = Vec::new();
-
-            for index in 0..archive.len() {
-                let mut entry = archive.by_index(index).map_err(|e| e.to_string())?;
-
-                if !entry.is_file() {
-                    continue;
-                }
-
-                // Prevent things like ../../file
-                let Some(safe_path) = entry.enclosed_name() else {
-                    continue;
-                };
-
-                let Some(filename) = safe_path.file_name().and_then(|name| name.to_str()) else {
-                    continue;
-                };
-
-                let filename = filename.to_string();
-                let file_path = Path::new(&filename);
-
-                let extension = file_path
-                    .extension()
-                    .and_then(|ext| ext.to_str())
-                    .unwrap_or("")
-                    .to_ascii_lowercase();
-
-                // Only cursor files.
-                if extension != "cur" && extension != "ani" {
-                    continue;
-                }
-
-                let stem = file_path
-                    .file_stem()
-                    .and_then(|stem| stem.to_str())
-                    .unwrap_or("")
-                    .to_ascii_lowercase();
-
-                // Find which Windows role this filename represents.
-                let Some((_, role)) = CURSOR_NAMES.iter().find(|(name, _)| *name == stem) else {
-                    println!("Ignoring unknown cursor: {}", filename);
-
-                    continue;
-                };
-
-                let output_path = theme_dir.join(&filename);
-
-                let mut output = File::create(&output_path).map_err(|e| e.to_string())?;
-
-                io::copy(&mut entry, &mut output).map_err(|e| e.to_string())?;
-
-                println!("{} -> {}", role, filename);
-
-                // role, variable name, filename
-                extracted_cursors.push((role.to_string(), stem, filename));
+            if metadata.cursors.is_empty() {
+                return Err("Pack contains no cursors".into());
             }
 
-            if extracted_cursors.is_empty() {
-                return Err("Pack contains no recognized cursor files".into());
+            println!("Importing '{}' by {}", metadata.name, metadata.author.name);
+
+            // --------------------------------
+            // Decode the Cursepack
+            // --------------------------------
+
+            // This restores the original CUR/ANI files,
+            // including animation frames and hotspots.
+            let extracted_cursors = decode_theme(&pack_path, &theme_dir)
+                .map_err(|e| format!("Failed to decode .cursepack: {e}"))?;
+
+            if extracted_cursors.len() != metadata.cursors.len() {
+                return Err("Decoded cursor count doesn't match metadata".into());
             }
 
             // --------------------------------
@@ -389,11 +342,21 @@ fn list_cursor_themes(app: tauri::AppHandle) -> Result<Vec<String>, String> {
                  [Wreg]\r\n",
             );
 
-            for (role, variable, _) in &extracted_cursors {
+            // Use the decoded filenames and metadata roles.
+            for (cursor, file_path) in metadata.cursors.iter().zip(&extracted_cursors) {
+                let filename = file_path
+                    .file_name()
+                    .and_then(|name| name.to_str())
+                    .ok_or("Invalid decoded cursor filename")?;
+
+                let variable = format!("CURSOR_{}", cursor.role);
+
                 inf.push_str(&format!(
                     "HKCU,\"Control Panel\\Cursors\",\"{}\",0x00000000,\"%CUR_DIR%\\%{}%\"\r\n",
-                    role, variable
+                    cursor.role, variable
                 ));
+
+                println!("{} -> {}", cursor.role, filename);
             }
 
             inf.push_str("\r\n[Strings]\r\n");
@@ -401,7 +364,15 @@ fn list_cursor_themes(app: tauri::AppHandle) -> Result<Vec<String>, String> {
             // Store the absolute extracted directory.
             inf.push_str(&format!("CUR_DIR=\"{}\"\r\n", theme_dir.to_string_lossy()));
 
-            for (_, variable, filename) in &extracted_cursors {
+            // Store cursor filenames.
+            for (cursor, file_path) in metadata.cursors.iter().zip(&extracted_cursors) {
+                let filename = file_path
+                    .file_name()
+                    .and_then(|name| name.to_str())
+                    .ok_or("Invalid decoded cursor filename")?;
+
+                let variable = format!("CURSOR_{}", cursor.role);
+
                 inf.push_str(&format!("{}=\"{}\"\r\n", variable, filename));
             }
 
@@ -414,14 +385,30 @@ fn list_cursor_themes(app: tauri::AppHandle) -> Result<Vec<String>, String> {
             Ok(extracted_cursors.len())
         })();
 
+        // --------------------------------
+        // Handle import result
+        // --------------------------------
+
         match import_result {
             Ok(count) => {
                 println!("Imported {} cursor(s) from {}", count, pack_name);
 
-                // Delete .cursepack only after EVERYTHING
-                // succeeded, including install.inf creation.
-                if let Err(error) = fs::remove_file(&pack_path) {
-                    eprintln!("Couldn't delete {}: {}", pack_path.display(), error);
+                let cache_path = packcache_dir.join(&pack_path.file_name().unwrap_or_default());
+
+                match fs::copy(&pack_path, &cache_path) {
+                    Ok(_) => {
+                        // Delete the original only after the cache copy succeeds.
+                        if let Err(error) = fs::remove_file(&pack_path) {
+                            eprintln!("Couldn't delete {}: {}", pack_path.display(), error);
+                        }
+                    }
+                    Err(error) => {
+                        eprintln!(
+                            "Couldn't cache {}: {}. Original file was preserved.",
+                            pack_path.display(),
+                            error
+                        );
+                    }
                 }
             }
 
@@ -646,12 +633,17 @@ pub fn run() {
         })
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_fs::init())
         .invoke_handler(tauri::generate_handler![
             cursor_preview,
             read_cursor_inf,
             apply_cursor_theme,
             list_cursor_themes,
-            get_accent_palette
+            get_accent_palette,
+            commands::context_menu::show_context_menu,
+            commands::cursepack::inspect_cursepack,
+            commands::cursepack::decode_cursepack,
+            commands::cursepack::encode_cursepack
         ])
         .run(tauri::generate_context!())
         .expect("error while running Tauri application");

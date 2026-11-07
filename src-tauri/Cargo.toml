@@ -18,6 +18,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
+cursepack = { path = "../cursepack-rust" }
 tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
@@ -31,4 +32,11 @@ windows = { version = "0.62.2", features = ["Win32_UI_WindowsAndMessaging", "UI_
 tauri-plugin-store = "2"
 zip = "8.6.0"
 tauri-plugin-process = "2"
+tauri-plugin-fs = "2.7.1"
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging"
+] }
 
