@@ -267,7 +267,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       <div id="curseInfoMid">
         <div id="curseInfoText">
           <p>
-            <span> </span>
             <span id="header">Why use this when MouseX exists?</span>
             <br><br>
 
@@ -285,7 +284,6 @@ window.addEventListener("DOMContentLoaded", async () => {
       <div id="curseInfoMid">
         <div id="curseInfoText">
           <p>
-            <span> </span>
             <span id="header">Why do you hate MouseX so much?</span>
             <br><br>
 
@@ -322,3 +320,17 @@ var accentCSS = `
     }
     `
 document.getElementById("systemAccents").innerHTML = accentCSS;
+
+// Disable reload and context menu --> https://github.com/orgs/tauri-apps/discussions/3844#discussioncomment-9291465
+document.addEventListener('keydown', function (event) {
+  if (
+    event.key === 'F5' ||
+    (event.ctrlKey && event.key === 'r')
+  ) {
+    event.preventDefault();
+  }
+});
+
+document.addEventListener('contextmenu', function (event) {
+  event.preventDefault();
+});

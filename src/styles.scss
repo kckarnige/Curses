@@ -171,7 +171,7 @@ body {
         padding: 14px 4px 10px 4px;
         margin: 20px;
         margin-bottom: 6px;
-        border-radius: 6px 6px 2px 2px;
+        border-radius: 6px 6px 1px 1px;
 
         div#curseIconContainer {
           display: flex;
@@ -202,8 +202,9 @@ body {
         display: block;
         outline: 1px solid rgba(255, 255, 255, 0.1);
         background: rgba(255, 255, 255, 0.05);
-        padding: 10px 8px 12px 8px;
-        border-radius: 2px;
+        padding: 8px;
+        padding-bottom: 12px;
+        border-radius: 1px;
         margin: 20px;
         margin-top: 6px;
         margin-bottom: 6px;
@@ -234,7 +235,7 @@ body {
         margin: 20px;
         margin-top: 6px;
         margin-bottom: 6px;
-        border-radius: 2px 2px 6px 6px;
+        border-radius: 1px 1px 6px 6px;
 
         div#curseInfoText {
           text-align: center;
