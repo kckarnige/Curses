@@ -1,6 +1,6 @@
 [package]
 name = "cursescurmnger"
-version = "0.2.0"
+version = "0.3.0"
 description = "An app to manage custom Window cursor themes."
 authors = ["Robert Elijah \"KiCKinTheBucket\" Reyes"]
 edition = "2021"
